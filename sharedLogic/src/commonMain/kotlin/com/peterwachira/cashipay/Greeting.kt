@@ -1,9 +1,9 @@
 package com.peterwachira.cashipay
 
 class Greeting {
-    private val platform = getPlatform()
+    private val platform: Platform = getPlatform()
 
     fun greet(): String {
-        return sayHello(platform.name)
+        return "Hello, ${platform.name}!"
     }
 }
