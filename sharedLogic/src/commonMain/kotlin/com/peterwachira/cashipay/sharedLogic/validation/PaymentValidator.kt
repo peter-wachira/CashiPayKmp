@@ -4,7 +4,10 @@ import com.peterwachira.cashipay.sharedLogic.model.PaymentCurrency
 import com.peterwachira.cashipay.sharedLogic.model.PaymentInput
 import com.peterwachira.cashipay.sharedLogic.model.PaymentRequest
 
-object PaymentValidator {
+/**
+ * Validates payment input and maps valid values to a payment request.
+ */
+internal object PaymentValidator {
 
     private val emailRegex = Regex(
         pattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"

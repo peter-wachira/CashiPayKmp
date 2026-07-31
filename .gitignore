@@ -17,3 +17,10 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 node_modules/
+# Local AI assistant / Codex context files
+/ai-context/
+/AGENTS.md
+/README_INSTALL.md
+/CODEX_HANDOFF_CASHIPAY_KMP.md
+/ANDROID_BEST_PRACTICES_SKILL.md
+**/CODEX_HANDOFF_CASHIPAY_KMP.md
