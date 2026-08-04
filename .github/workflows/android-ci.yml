@@ -1,0 +1,85 @@
+name: Android CI
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - master
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  android-quality:
+    name: Android Quality Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v6
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Enforce develop to master flow
+        if: github.event_name == 'pull_request' && github.base_ref == 'master'
+        env:
+          HEAD_BRANCH: ${{ github.head_ref }}
+        run: |
+          if [ "$HEAD_BRANCH" != "develop" ]; then
+            echo "Pull requests to master must come from develop."
+            exit 1
+          fi
+
+      - name: Run shared and Android quality checks
+        run: >-
+          ./gradlew --no-daemon
+          :sharedLogic:testAndroidHostTest
+          :androidApp:testDebugUnitTest
+          :androidApp:lintDebug
+          :androidApp:assembleDebug
+
+      - name: Upload Android reports on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-build-reports
+          path: '**/build/reports/**'
+          if-no-files-found: ignore
+
+  kmp-ios-quality:
+    name: KMP iOS Quality Gate
+    if: github.event_name == 'pull_request' && github.base_ref == 'master'
+    runs-on: macos-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v6
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Run full shared checks
+        run: ./gradlew --no-daemon :sharedLogic:check

@@ -2,6 +2,7 @@ package com.peterwachira.cashipay.sharedLogic.validation
 
 import com.peterwachira.cashipay.sharedLogic.model.PaymentCurrency
 import com.peterwachira.cashipay.sharedLogic.model.PaymentInput
+import com.peterwachira.cashipay.sharedLogic.model.Money
 import com.peterwachira.cashipay.sharedLogic.model.PaymentRequest
 
 /**
@@ -26,18 +27,20 @@ internal object PaymentValidator {
             errors += PaymentValidationError.InvalidRecipientEmail
         }
 
-        val parsedAmount = if (trimmedAmount.isBlank()) {
+        val parsedAmountMinor = if (trimmedAmount.isBlank()) {
             errors += PaymentValidationError.AmountRequired
             null
         } else {
-            trimmedAmount.toDoubleOrNull()
+            trimmedAmount.toMinorUnits(
+                fractionDigits = currency?.fractionDigits ?: DEFAULT_FRACTION_DIGITS
+            )
         }
 
-        if (trimmedAmount.isNotBlank() && parsedAmount == null) {
+        if (trimmedAmount.isNotBlank() && parsedAmountMinor == null) {
             errors += PaymentValidationError.InvalidAmount
         }
 
-        if (parsedAmount != null && parsedAmount <= 0.0) {
+        if (parsedAmountMinor != null && parsedAmountMinor <= 0L) {
             errors += PaymentValidationError.AmountMustBeGreaterThanZero
         }
 
@@ -45,16 +48,60 @@ internal object PaymentValidator {
             errors += PaymentValidationError.UnsupportedCurrency
         }
 
-        return if (errors.isEmpty() && parsedAmount != null && currency != null) {
+        return if (errors.isEmpty() && parsedAmountMinor != null && currency != null) {
             PaymentValidationResult.Valid(
                 paymentRequest = PaymentRequest(
                     recipientEmail = trimmedEmail,
-                    amount = parsedAmount,
-                    currency = currency
+                    amount = Money(
+                        amountMinor = parsedAmountMinor,
+                        currency = currency
+                    )
                 )
             )
         } else {
             PaymentValidationResult.Invalid(errors)
         }
     }
+
+    private fun String.toMinorUnits(fractionDigits: Int): Long? {
+        val isNegative = startsWith("-")
+        val unsignedValue = removePrefix("-")
+        val parts = unsignedValue.split('.')
+
+        if (parts.size > 2 || unsignedValue.isEmpty()) return null
+
+        val wholePart = parts[0].ifEmpty { "0" }
+        val fractionalPart = parts.getOrElse(1) { "" }
+
+        if (
+            !wholePart.all(Char::isDigit) ||
+            !fractionalPart.all(Char::isDigit) ||
+            fractionalPart.length > fractionDigits
+        ) {
+            return null
+        }
+
+        val multiplier = tenToThePowerOf(fractionDigits)
+        val wholeMinor = wholePart.toLongOrNull() ?: return null
+        val fractionalMinor = fractionalPart
+            .padEnd(fractionDigits, '0')
+            .ifEmpty { "0" }
+            .toLongOrNull()
+            ?: return null
+
+        if (wholeMinor > (Long.MAX_VALUE - fractionalMinor) / multiplier) return null
+
+        val amountMinor = (wholeMinor * multiplier) + fractionalMinor
+        return if (isNegative) -amountMinor else amountMinor
+    }
+
+    private fun tenToThePowerOf(exponent: Int): Long {
+        var result = 1L
+        repeat(exponent) {
+            result *= 10L
+        }
+        return result
+    }
+
+    private const val DEFAULT_FRACTION_DIGITS = 2
 }
