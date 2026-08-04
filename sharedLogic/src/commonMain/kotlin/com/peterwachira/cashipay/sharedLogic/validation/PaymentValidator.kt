@@ -1,9 +1,11 @@
 package com.peterwachira.cashipay.sharedLogic.validation
 
+import com.peterwachira.cashipay.sharedLogic.model.MinorUnits
 import com.peterwachira.cashipay.sharedLogic.model.PaymentCurrency
 import com.peterwachira.cashipay.sharedLogic.model.PaymentInput
 import com.peterwachira.cashipay.sharedLogic.model.Money
 import com.peterwachira.cashipay.sharedLogic.model.PaymentRequest
+import com.peterwachira.cashipay.sharedLogic.model.RecipientEmail
 
 /**
  * Validates payment input and maps valid values to a payment request.
@@ -21,12 +23,13 @@ internal object PaymentValidator {
         val trimmedAmount = input.amount.trim()
         val currency = PaymentCurrency.fromCode(input.currencyCode)
 
+        val recipientEmail = RecipientEmail.from(trimmedEmail)
+
         if (trimmedEmail.isBlank()) {
             errors += PaymentValidationError.RecipientEmailRequired
-        } else if (!emailRegex.matches(trimmedEmail)) {
+        } else if (recipientEmail == null) {
             errors += PaymentValidationError.InvalidRecipientEmail
         }
-
         val parsedAmountMinor = if (trimmedAmount.isBlank()) {
             errors += PaymentValidationError.AmountRequired
             null
@@ -39,21 +42,30 @@ internal object PaymentValidator {
         if (trimmedAmount.isNotBlank() && parsedAmountMinor == null) {
             errors += PaymentValidationError.InvalidAmount
         }
-
-        if (parsedAmountMinor != null && parsedAmountMinor <= 0L) {
-            errors += PaymentValidationError.AmountMustBeGreaterThanZero
+        val minorUnits = if (parsedAmountMinor != null) {
+            MinorUnits.fromPositive(parsedAmountMinor)
+        } else {
+            null
         }
 
+        if (parsedAmountMinor != null && minorUnits == null) {
+            errors += PaymentValidationError.AmountMustBeGreaterThanZero
+        }
         if (currency == null) {
             errors += PaymentValidationError.UnsupportedCurrency
         }
 
-        return if (errors.isEmpty() && parsedAmountMinor != null && currency != null) {
+        return if (
+            errors.isEmpty() &&
+            recipientEmail != null &&
+            minorUnits != null &&
+            currency != null
+        ) {
             PaymentValidationResult.Valid(
                 paymentRequest = PaymentRequest(
-                    recipientEmail = trimmedEmail,
+                    recipientEmail = recipientEmail,
                     amount = Money(
-                        amountMinor = parsedAmountMinor,
+                        amountMinor = minorUnits,
                         currency = currency
                     )
                 )
