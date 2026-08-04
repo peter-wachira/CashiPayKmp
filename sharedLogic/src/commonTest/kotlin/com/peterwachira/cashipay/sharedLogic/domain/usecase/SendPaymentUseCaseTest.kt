@@ -4,6 +4,7 @@ import com.peterwachira.cashipay.sharedLogic.core.result.AppResult
 import com.peterwachira.cashipay.sharedLogic.domain.repository.PaymentRepository
 import com.peterwachira.cashipay.sharedLogic.model.PaymentCurrency
 import com.peterwachira.cashipay.sharedLogic.model.PaymentInput
+import com.peterwachira.cashipay.sharedLogic.model.Money
 import com.peterwachira.cashipay.sharedLogic.model.PaymentRequest
 import com.peterwachira.cashipay.sharedLogic.model.PaymentTransaction
 import com.peterwachira.cashipay.sharedLogic.validation.PaymentValidationError
@@ -107,8 +108,10 @@ internal class SendPaymentUseCaseTest {
     private fun sampleTransaction() = PaymentTransaction(
         id = "transaction-1",
         recipientEmail = "customer@example.com",
-        amount = "100.50",
-        currency = PaymentCurrency.USD,
+        amount = Money(
+            amountMinor = 10_050L,
+            currency = PaymentCurrency.USD
+        ),
         createdAtMillis = 1_000L
     )
 }

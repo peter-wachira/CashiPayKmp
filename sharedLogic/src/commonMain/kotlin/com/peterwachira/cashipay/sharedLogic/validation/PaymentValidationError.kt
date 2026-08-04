@@ -1,5 +1,8 @@
 package com.peterwachira.cashipay.sharedLogic.validation
 
+/**
+ * Defines the user-correctable errors found while validating a payment.
+ */
 sealed interface PaymentValidationError {
     data object RecipientEmailRequired: PaymentValidationError
     data object InvalidRecipientEmail: PaymentValidationError
