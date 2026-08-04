@@ -2,6 +2,7 @@ package com.peterwachira.cashipay.sharedLogic.domain.validation
 
 import com.peterwachira.cashipay.sharedLogic.model.PaymentCurrency
 import com.peterwachira.cashipay.sharedLogic.model.PaymentInput
+import com.peterwachira.cashipay.sharedLogic.model.Money
 import com.peterwachira.cashipay.sharedLogic.validation.PaymentValidationError
 import com.peterwachira.cashipay.sharedLogic.validation.PaymentValidationResult
 import com.peterwachira.cashipay.sharedLogic.validation.PaymentValidator
@@ -26,8 +27,10 @@ internal class PaymentValidatorTest {
         // Then
         assertTrue(result is PaymentValidationResult.Valid)
         assertEquals("customer@example.com", result.paymentRequest.recipientEmail)
-        assertEquals(100.50, result.paymentRequest.amount)
-        assertEquals(PaymentCurrency.USD, result.paymentRequest.currency)
+        assertEquals(
+            Money(amountMinor = 10_050L, currency = PaymentCurrency.USD),
+            result.paymentRequest.amount
+        )
     }
 
     @Test
@@ -79,6 +82,40 @@ internal class PaymentValidatorTest {
         // Then
         assertTrue(result is PaymentValidationResult.Invalid)
         assertTrue(result.errors.contains(PaymentValidationError.AmountMustBeGreaterThanZero))
+    }
+
+    @Test
+    fun `when amount has too many decimal places then validation returns invalid amount`() {
+        // Given
+        val input = PaymentInput(
+            recipientEmail = "customer@example.com",
+            amount = "100.123",
+            currencyCode = "USD"
+        )
+
+        // When
+        val result = PaymentValidator.validate(input)
+
+        // Then
+        assertTrue(result is PaymentValidationResult.Invalid)
+        assertTrue(result.errors.contains(PaymentValidationError.InvalidAmount))
+    }
+
+    @Test
+    fun `when amount exceeds minor unit range then validation returns invalid amount`() {
+        // Given
+        val input = PaymentInput(
+            recipientEmail = "customer@example.com",
+            amount = "92233720368547758.08",
+            currencyCode = "USD"
+        )
+
+        // When
+        val result = PaymentValidator.validate(input)
+
+        // Then
+        assertTrue(result is PaymentValidationResult.Invalid)
+        assertTrue(result.errors.contains(PaymentValidationError.InvalidAmount))
     }
 
     @Test
