@@ -56,7 +56,7 @@ jobs:
 
       - name: Upload Android reports on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: android-build-reports
           path: '**/build/reports/**'
