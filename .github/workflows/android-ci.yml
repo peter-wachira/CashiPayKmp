@@ -62,6 +62,24 @@ jobs:
           path: '**/build/reports/**'
           if-no-files-found: ignore
 
+  mock-backend-quality:
+    name: Mock Backend Quality Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Run mock backend tests
+        working-directory: mock-backend
+        run: npm test
+
   kmp-ios-quality:
     name: KMP iOS Quality Gate
     if: github.event_name == 'pull_request' && github.base_ref == 'master'
