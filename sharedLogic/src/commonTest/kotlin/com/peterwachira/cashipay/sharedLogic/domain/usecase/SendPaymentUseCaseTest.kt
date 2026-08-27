@@ -2,11 +2,14 @@ package com.peterwachira.cashipay.sharedLogic.domain.usecase
 
 import com.peterwachira.cashipay.sharedLogic.core.result.AppResult
 import com.peterwachira.cashipay.sharedLogic.domain.repository.PaymentRepository
+import com.peterwachira.cashipay.sharedLogic.model.MinorUnits
 import com.peterwachira.cashipay.sharedLogic.model.PaymentCurrency
 import com.peterwachira.cashipay.sharedLogic.model.PaymentInput
 import com.peterwachira.cashipay.sharedLogic.model.Money
 import com.peterwachira.cashipay.sharedLogic.model.PaymentRequest
 import com.peterwachira.cashipay.sharedLogic.model.PaymentTransaction
+import com.peterwachira.cashipay.sharedLogic.model.RecipientEmail
+import com.peterwachira.cashipay.sharedLogic.model.TransactionId
 import com.peterwachira.cashipay.sharedLogic.validation.PaymentValidationError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -106,10 +109,14 @@ internal class SendPaymentUseCaseTest {
     )
 
     private fun sampleTransaction() = PaymentTransaction(
-        id = "transaction-1",
-        recipientEmail = "customer@example.com",
+        id = requireNotNull(TransactionId.from("transaction-1")),
+        recipientEmail = requireNotNull(
+            RecipientEmail.from("customer@example.com")
+        ),
         amount = Money(
-            amountMinor = 10_050L,
+            amountMinor = requireNotNull(
+                MinorUnits.fromPositive(10_050L)
+            ),
             currency = PaymentCurrency.USD
         ),
         createdAtMillis = 1_000L

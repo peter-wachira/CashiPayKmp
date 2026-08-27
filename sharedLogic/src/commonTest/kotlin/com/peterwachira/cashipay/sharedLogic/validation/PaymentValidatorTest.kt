@@ -1,11 +1,10 @@
-package com.peterwachira.cashipay.sharedLogic.domain.validation
+package com.peterwachira.cashipay.sharedLogic.validation
 
+import com.peterwachira.cashipay.sharedLogic.model.MinorUnits
 import com.peterwachira.cashipay.sharedLogic.model.PaymentCurrency
 import com.peterwachira.cashipay.sharedLogic.model.PaymentInput
 import com.peterwachira.cashipay.sharedLogic.model.Money
-import com.peterwachira.cashipay.sharedLogic.validation.PaymentValidationError
-import com.peterwachira.cashipay.sharedLogic.validation.PaymentValidationResult
-import com.peterwachira.cashipay.sharedLogic.validation.PaymentValidator
+import com.peterwachira.cashipay.sharedLogic.model.RecipientEmail
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -26,9 +25,15 @@ internal class PaymentValidatorTest {
 
         // Then
         assertTrue(result is PaymentValidationResult.Valid)
-        assertEquals("customer@example.com", result.paymentRequest.recipientEmail)
         assertEquals(
-            Money(amountMinor = 10_050L, currency = PaymentCurrency.USD),
+            RecipientEmail.from("customer@example.com"),
+            result.paymentRequest.recipientEmail
+        )
+        assertEquals(
+            Money(
+                amountMinor = requireNotNull(MinorUnits.fromPositive(10_050L)),
+                currency = PaymentCurrency.USD
+            ),
             result.paymentRequest.amount
         )
     }
