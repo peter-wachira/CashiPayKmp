@@ -16,10 +16,13 @@ dependencies {
 
     implementation(libs.androidx.activity.compose)
 
-    implementation(compose.material3)
-    implementation(compose.foundation)
-    implementation(compose.ui)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.ui)
     implementation(libs.compose.uiToolingPreview)
+
+    testImplementation(libs.junit)
+
     debugImplementation(libs.compose.uiTooling)
 }
 
