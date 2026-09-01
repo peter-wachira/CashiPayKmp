@@ -14,6 +14,11 @@ kotlin {
 dependencies {
     implementation(projects.sharedLogic)
 
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
+
+    implementation(libs.kotlinx.coroutines.play.services)
+
     implementation(libs.androidx.activity.compose)
 
     implementation(libs.compose.material3)
@@ -22,6 +27,7 @@ dependencies {
     implementation(libs.compose.uiToolingPreview)
 
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     debugImplementation(libs.compose.uiTooling)
 }
