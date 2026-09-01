@@ -26,7 +26,7 @@ internal class PaymentDtoMapperTest {
         // Then
         assertEquals(
             PaymentRequestDto(
-                recipientEmail = "customer@example.com",
+                recipientEmail = "peterwachira@email.com",
                 amountMinor = 10_050L,
                 currencyCode = "USD"
             ),
@@ -99,7 +99,7 @@ internal class PaymentDtoMapperTest {
     private fun validPaymentRequest(): PaymentRequest {
         return PaymentRequest(
             recipientEmail = requireNotNull(
-                RecipientEmail.from("customer@example.com")
+                RecipientEmail.from("peterwachira@email.com")
             ),
             amount = Money(
                 amountMinor = requireNotNull(
@@ -113,7 +113,7 @@ internal class PaymentDtoMapperTest {
     private fun validResponse(): PaymentResponseDto {
         return PaymentResponseDto(
             id = "transaction-1",
-            recipientEmail = "customer@example.com",
+            recipientEmail = "peterwachira@email.com",
             amountMinor = 10_050L,
             currencyCode = "USD",
             createdAtMillis = 1_000L
@@ -126,7 +126,7 @@ internal class PaymentDtoMapperTest {
                 TransactionId.from("transaction-1")
             ),
             recipientEmail = requireNotNull(
-                RecipientEmail.from("customer@example.com")
+                RecipientEmail.from("peterwachira@email.com")
             ),
             amount = Money(
                 amountMinor = requireNotNull(

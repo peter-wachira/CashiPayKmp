@@ -6,7 +6,7 @@ import { processPayment } from "../src/paymentService.js";
 test("when payment request is valid then payment is processed", () => {
   // Given
   const input = {
-    recipientEmail: "  customer@example.com  ",
+    recipientEmail: "  peterwachira@email.com  ",
     amountMinor: 10_050,
     currencyCode: "usd"
   };
@@ -22,7 +22,7 @@ test("when payment request is valid then payment is processed", () => {
   assert.equal(result.isSuccess, true);
   assert.deepEqual(result.payment, {
     id: "transaction-1",
-    recipientEmail: "customer@example.com",
+    recipientEmail: "peterwachira@email.com",
     amountMinor: 10_050,
     currencyCode: "USD",
     createdAtMillis: 1_000
@@ -50,7 +50,7 @@ test("when recipient email is invalid then processing returns error", () => {
 test("when amount is not positive then processing returns error", () => {
   // Given
   const input = {
-    recipientEmail: "customer@example.com",
+    recipientEmail: "peterwachira@email.com",
     amountMinor: 0,
     currencyCode: "USD"
   };
@@ -68,7 +68,7 @@ test("when amount is not positive then processing returns error", () => {
 test("when currency is unsupported then processing returns error", () => {
   // Given
   const input = {
-    recipientEmail: "customer@example.com",
+    recipientEmail: "peterwachira@email.com",
     amountMinor: 10_050,
     currencyCode: "KES"
   };

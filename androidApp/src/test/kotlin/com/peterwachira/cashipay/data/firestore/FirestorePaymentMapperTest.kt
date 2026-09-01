@@ -26,7 +26,7 @@ internal class FirestorePaymentMapperTest {
         // Then
         assertEquals(
             FirestorePaymentDocument(
-                recipientEmail = "customer@example.com",
+                recipientEmail = "peterwachira@email.com",
                 amountMinor = 10_050L,
                 currencyCode = "USD",
                 createdAtMillis = 1_000L
@@ -113,7 +113,7 @@ internal class FirestorePaymentMapperTest {
 
     private fun validDocument(): FirestorePaymentDocument {
         return FirestorePaymentDocument(
-            recipientEmail = "customer@example.com",
+            recipientEmail = "peterwachira@email.com",
             amountMinor = 10_050L,
             currencyCode = "USD",
             createdAtMillis = 1_000L
@@ -126,7 +126,7 @@ internal class FirestorePaymentMapperTest {
                 TransactionId.from("transaction-1")
             ),
             recipientEmail = requireNotNull(
-                RecipientEmail.from("customer@example.com")
+                RecipientEmail.from("peterwachira@email.com")
             ),
             amount = Money(
                 amountMinor = requireNotNull(

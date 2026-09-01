@@ -44,7 +44,7 @@ Expected response:
 curl \
   --request POST \
   --header "Content-Type: application/json" \
-  --data '{"recipientEmail":"customer@example.com","amountMinor":10050,"currencyCode":"USD"}' \
+  --data '{"recipientEmail":"peterwachira@email.com","amountMinor":10050,"currencyCode":"USD"}' \
   http://localhost:8080/payments
 ```
 
@@ -53,7 +53,7 @@ A successful request returns HTTP `201` with a generated transaction ID and time
 ```json
 {
   "id": "generated-transaction-id",
-  "recipientEmail": "customer@example.com",
+  "recipientEmail": "peterwachira@email.com",
   "amountMinor": 10050,
   "currencyCode": "USD",
   "createdAtMillis": 1000

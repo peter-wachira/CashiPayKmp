@@ -50,7 +50,7 @@ internal class PaymentApiTest {
             assertEquals(ContentType.Application.Json, requestBody.contentType)
             assertEquals(
                 """
-                {"recipientEmail":"customer@example.com","amountMinor":10050,"currencyCode":"USD"}
+                {"recipientEmail":"peterwachira@email.com","amountMinor":10050,"currencyCode":"USD"}
                 """.trimIndent(),
                 requestBody.text
             )
@@ -177,7 +177,7 @@ internal class PaymentApiTest {
     private fun validRequest(): PaymentRequest {
         return PaymentRequest(
             recipientEmail = requireNotNull(
-                RecipientEmail.from("customer@example.com")
+                RecipientEmail.from("peterwachira@email.com")
             ),
             amount = Money(
                 amountMinor = requireNotNull(
@@ -194,7 +194,7 @@ internal class PaymentApiTest {
                 TransactionId.from("transaction-1")
             ),
             recipientEmail = requireNotNull(
-                RecipientEmail.from("customer@example.com")
+                RecipientEmail.from("peterwachira@email.com")
             ),
             amount = Money(
                 amountMinor = requireNotNull(
@@ -210,7 +210,7 @@ internal class PaymentApiTest {
         return """
             {
               "id": "transaction-1",
-              "recipientEmail": "customer@example.com",
+              "recipientEmail": "peterwachira@email.com",
               "amountMinor": 10050,
               "currencyCode": "USD",
               "createdAtMillis": 1000

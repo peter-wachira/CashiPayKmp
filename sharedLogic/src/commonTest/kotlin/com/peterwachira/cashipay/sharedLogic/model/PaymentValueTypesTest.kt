@@ -10,14 +10,14 @@ internal class PaymentValueTypesTest {
     @Test
     fun `when recipient email is valid then factory normalizes it`() {
         // Given
-        val rawEmail = "  customer@example.com  "
+        val rawEmail = "  peterwachira@email.com  "
 
         // When
         val recipientEmail = RecipientEmail.from(rawEmail)
 
         // Then
         assertNotNull(recipientEmail)
-        assertEquals("customer@example.com", recipientEmail.value)
+        assertEquals("peterwachira@email.com", recipientEmail.value)
     }
 
     @Test
