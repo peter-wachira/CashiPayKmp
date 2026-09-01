@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "420110900038",
+    "project_id": "cashipay-8dbde",
+    "storage_bucket": "cashipay-8dbde.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:420110900038:android:47f21c6a12ac6ad8bb6347",
+        "android_client_info": {
+          "package_name": "com.peterwachira.cashipay"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcsRQQfM2Y-b-zCoBwWwttiyBbfn3rUQE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
