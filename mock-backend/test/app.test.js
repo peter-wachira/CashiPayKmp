@@ -21,7 +21,7 @@ test("when valid payment is posted then server returns created payment", async (
   // Given
   const baseUrl = await startServer();
   const requestBody = {
-    recipientEmail: "customer@example.com",
+    recipientEmail: "peterwachira@email.com",
     amountMinor: 10_050,
     currencyCode: "USD"
   };
@@ -40,7 +40,7 @@ test("when valid payment is posted then server returns created payment", async (
   assert.equal(response.status, 201);
   assert.equal(typeof responseBody.id, "string");
   assert.ok(responseBody.id.length > 0);
-  assert.equal(responseBody.recipientEmail, "customer@example.com");
+  assert.equal(responseBody.recipientEmail, "peterwachira@email.com");
   assert.equal(responseBody.amountMinor, 10_050);
   assert.equal(responseBody.currencyCode, "USD");
   assert.ok(Number.isSafeInteger(responseBody.createdAtMillis));

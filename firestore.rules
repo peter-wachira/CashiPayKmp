@@ -1,0 +1,33 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId}/payments/{paymentId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidPayment();
+      allow update, delete: if false;
+    }
+
+    function isOwner(userId) {
+      return request.auth != null &&
+        request.auth.uid == userId;
+    }
+
+    function isValidPayment() {
+      return request.resource.data.keys().hasOnly([
+          'recipientEmail',
+          'amountMinor',
+          'currencyCode',
+          'createdAtMillis'
+        ]) &&
+        request.resource.data.recipientEmail is string &&
+        request.resource.data.recipientEmail.size() > 3 &&
+        request.resource.data.recipientEmail.size() <= 254 &&
+        request.resource.data.amountMinor is int &&
+        request.resource.data.amountMinor > 0 &&
+        request.resource.data.currencyCode in ['USD', 'EUR'] &&
+        request.resource.data.createdAtMillis is int &&
+        request.resource.data.createdAtMillis > 0;
+    }
+  }
+}
