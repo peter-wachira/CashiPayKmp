@@ -10,10 +10,12 @@ import com.peterwachira.cashipay.data.firestore.FirestorePaymentDataSource
 import com.peterwachira.cashipay.data.remote.KtorPaymentRemoteDataSource
 import com.peterwachira.cashipay.data.remote.RemotePaymentDataSource
 import com.peterwachira.cashipay.data.repository.AndroidPaymentRepository
+import com.peterwachira.cashipay.presentation.payment.PaymentViewModel
 import com.peterwachira.cashipay.sharedLogic.data.remote.PaymentApi
 import com.peterwachira.cashipay.sharedLogic.domain.repository.PaymentRepository
 import com.peterwachira.cashipay.sharedLogic.domain.usecase.ObserveTransactionsUseCase
 import com.peterwachira.cashipay.sharedLogic.domain.usecase.SendPaymentUseCase
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 /**
@@ -69,6 +71,12 @@ internal val appModule = module {
     factory {
         ObserveTransactionsUseCase(
             paymentRepository = get()
+        )
+    }
+
+    viewModel {
+        PaymentViewModel(
+            sendPaymentUseCase = get()
         )
     }
 }
