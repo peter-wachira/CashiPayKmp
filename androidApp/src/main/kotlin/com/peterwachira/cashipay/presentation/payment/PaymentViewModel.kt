@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.peterwachira.cashipay.sharedLogic.domain.usecase.SendPaymentResult
 import com.peterwachira.cashipay.sharedLogic.domain.usecase.SendPaymentUseCase
+import com.peterwachira.cashipay.sharedLogic.domain.usecase.ValidatePaymentResult
+import com.peterwachira.cashipay.sharedLogic.domain.usecase.ValidatePaymentUseCase
 import com.peterwachira.cashipay.sharedLogic.model.PaymentCurrency
 import com.peterwachira.cashipay.sharedLogic.model.PaymentInput
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,10 +15,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
- * Coordinates payment form actions and exposes immutable screen state.
+ * Coordinates payment actions and exposes immutable workflow state.
  */
 internal class PaymentViewModel(
-    private val sendPaymentUseCase: SendPaymentUseCase
+    private val validatePaymentUseCase: ValidatePaymentUseCase,
+    private val sendPaymentUseCase: SendPaymentUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(PaymentUiState())
     val uiState: StateFlow<PaymentUiState> = _uiState.asStateFlow()
@@ -35,14 +38,88 @@ internal class PaymentViewModel(
                 updateCurrency(action.currency)
             }
 
-            PaymentUiAction.Submit -> {
-                submitPayment()
-            }
-
             PaymentUiAction.DismissFeedback -> {
                 dismissFeedback()
             }
+
+            PaymentUiAction.ConfirmPayment -> {
+                confirmPayment()
+            }
+
+            PaymentUiAction.EditPayment -> {
+                editPayment()
+            }
+
+            PaymentUiAction.ReviewPayment -> {
+                reviewPayment()
+            }
         }
+    }
+
+    private fun reviewPayment() {
+        val paymentInput = createPaymentInput()
+        val result = validatePaymentUseCase(paymentInput)
+        when (result) {
+            is ValidatePaymentResult.Valid -> {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        validationErrors = emptyList(),
+                        paymentToReview = result.paymentRequest,
+                        submissionError = null
+                    )
+                }
+            }
+
+            is ValidatePaymentResult.Invalid -> {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        validationErrors = result.errors,
+                        paymentToReview = null,
+                        submissionError = null
+                    )
+                }
+            }
+        }
+    }
+
+    private fun editPayment() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                paymentToReview = null,
+                submissionError = null
+            )
+        }
+    }
+
+    private fun confirmPayment() {
+        val currentState = _uiState.value
+        if (currentState.paymentToReview == null || currentState.isSubmitting) {
+            return
+        }
+        val paymentInput = createPaymentInput()
+        _uiState.update { state ->
+            state.copy(
+                isSubmitting = true,
+                validationErrors = emptyList(),
+                submissionError = null,
+                submittedTransaction = null
+            )
+        }
+
+        viewModelScope.launch {
+            val result = sendPaymentUseCase(paymentInput)
+            handlePaymentResult(result)
+        }
+    }
+
+    private fun createPaymentInput(): PaymentInput {
+        val currentState = _uiState.value
+        val currencyCode = currentState.selectedCurrency
+        return PaymentInput(
+            recipientEmail = currentState.recipientEmail,
+            amount = currentState.amount,
+            currencyCode = currencyCode.code
+        )
     }
 
     private fun updateRecipientEmail(value: String) {
@@ -50,6 +127,7 @@ internal class PaymentViewModel(
             currentState.copy(
                 recipientEmail = value,
                 validationErrors = emptyList(),
+                paymentToReview = null,
                 submittedTransaction = null,
                 submissionError = null
             )
@@ -61,6 +139,7 @@ internal class PaymentViewModel(
             currentState.copy(
                 amount = value,
                 validationErrors = emptyList(),
+                paymentToReview = null,
                 submittedTransaction = null,
                 submissionError = null
             )
@@ -72,37 +151,10 @@ internal class PaymentViewModel(
             currentState.copy(
                 selectedCurrency = currency,
                 validationErrors = emptyList(),
+                paymentToReview = null,
                 submittedTransaction = null,
                 submissionError = null
             )
-        }
-    }
-
-    private fun submitPayment() {
-        val currentState = _uiState.value
-
-        if (currentState.isSubmitting) {
-            return
-        }
-
-        val paymentInput = PaymentInput(
-            recipientEmail = currentState.recipientEmail,
-            amount = currentState.amount,
-            currencyCode = currentState.selectedCurrency.code
-        )
-
-        _uiState.update { state ->
-            state.copy(
-                isSubmitting = true,
-                validationErrors = emptyList(),
-                submittedTransaction = null,
-                submissionError = null
-            )
-        }
-
-        viewModelScope.launch {
-            val result = sendPaymentUseCase(paymentInput)
-            handlePaymentResult(result)
         }
     }
 
@@ -113,6 +165,7 @@ internal class PaymentViewModel(
                     currentState.copy(
                         recipientEmail = "",
                         amount = "",
+                        paymentToReview = null,
                         isSubmitting = false,
                         submittedTransaction = result.transaction
                     )
@@ -122,6 +175,7 @@ internal class PaymentViewModel(
             is SendPaymentResult.ValidationError -> {
                 _uiState.update { currentState ->
                     currentState.copy(
+                        paymentToReview = null,
                         isSubmitting = false,
                         validationErrors = result.errors
                     )
