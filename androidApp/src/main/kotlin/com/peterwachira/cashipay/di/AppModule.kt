@@ -15,6 +15,7 @@ import com.peterwachira.cashipay.sharedLogic.data.remote.PaymentApi
 import com.peterwachira.cashipay.sharedLogic.domain.repository.PaymentRepository
 import com.peterwachira.cashipay.sharedLogic.domain.usecase.ObserveTransactionsUseCase
 import com.peterwachira.cashipay.sharedLogic.domain.usecase.SendPaymentUseCase
+import com.peterwachira.cashipay.sharedLogic.domain.usecase.ValidatePaymentUseCase
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -69,6 +70,10 @@ internal val appModule = module {
     }
 
     factory {
+        ValidatePaymentUseCase()
+    }
+
+    factory {
         ObserveTransactionsUseCase(
             paymentRepository = get()
         )
@@ -76,7 +81,8 @@ internal val appModule = module {
 
     viewModel {
         PaymentViewModel(
-            sendPaymentUseCase = get()
+            sendPaymentUseCase = get(),
+            validatePaymentUseCase = get()
         )
     }
 }
