@@ -1,6 +1,7 @@
 package com.peterwachira.cashipay.presentation.ui.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,12 +10,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -32,7 +36,8 @@ import com.peterwachira.cashipay.R
 import com.peterwachira.cashipay.presentation.activity.TransactionHistoryUiState
 import com.peterwachira.cashipay.presentation.theme.CashiPayTheme
 import com.peterwachira.cashipay.presentation.ui.activity.PaymentDateFormatter
-import com.peterwachira.cashipay.presentation.ui.component.CashiPrimaryButton
+import com.peterwachira.cashipay.presentation.ui.component.CashiHeroDecoration
+import com.peterwachira.cashipay.presentation.ui.component.CashiPayWordmark
 import com.peterwachira.cashipay.presentation.ui.payment.PaymentAmountFormatter
 import com.peterwachira.cashipay.sharedLogic.model.MinorUnits
 import com.peterwachira.cashipay.sharedLogic.model.Money
@@ -56,8 +61,11 @@ internal fun HomeScreen(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp, vertical = 24.dp)
     ) {
+        CashiPayWordmark()
+
         Text(
             text = stringResource(R.string.home_greeting),
+            modifier = Modifier.padding(top = 28.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             style = MaterialTheme.typography.bodyLarge
         )
@@ -91,26 +99,57 @@ private fun PaymentActionCard(
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.primaryContainer,
-        shape = MaterialTheme.shapes.extraLarge
+        color = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary,
+        shape = MaterialTheme.shapes.extraLarge,
+        shadowElevation = 8.dp
     ) {
-        Column(modifier = Modifier.padding(24.dp)) {
-            Text(
-                text = stringResource(R.string.home_send_card_title),
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                style = MaterialTheme.typography.headlineSmall
-            )
-            Text(
-                text = stringResource(R.string.home_send_card_message),
-                modifier = Modifier.padding(top = 8.dp),
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            CashiPrimaryButton(
-                text = stringResource(R.string.home_send_action),
-                onClick = onSendPaymentClick,
-                modifier = Modifier.padding(top = 24.dp)
-            )
+        Box(modifier = Modifier.heightIn(min = 224.dp)) {
+            CashiHeroDecoration(modifier = Modifier.fillMaxSize())
+
+            Column(modifier = Modifier.padding(24.dp)) {
+                Surface(
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.14f),
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    shape = CircleShape
+                ) {
+                    Text(
+                        text = stringResource(R.string.home_secure_payments),
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
+
+                Text(
+                    text = stringResource(R.string.home_send_card_title),
+                    modifier = Modifier.padding(top = 20.dp),
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                Text(
+                    text = stringResource(R.string.home_send_card_message),
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .fillMaxWidth(0.78f),
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.80f),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Button(
+                    onClick = onSendPaymentClick,
+                    modifier = Modifier
+                        .padding(top = 20.dp)
+                        .heightIn(min = 48.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.primary
+                    ),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Text(
+                        text = stringResource(R.string.home_send_action),
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
+            }
         }
     }
 }
@@ -191,7 +230,9 @@ private fun RecentPaymentRow(
     Surface(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.medium
+        color = MaterialTheme.colorScheme.surface,
+        shape = MaterialTheme.shapes.large,
+        shadowElevation = 1.dp
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -201,7 +242,12 @@ private fun RecentPaymentRow(
                 modifier = Modifier
                     .size(42.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.secondaryContainer),
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.16f),
+                        shape = CircleShape
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
