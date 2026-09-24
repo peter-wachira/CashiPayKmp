@@ -11,6 +11,7 @@ import com.peterwachira.cashipay.data.remote.KtorPaymentRemoteDataSource
 import com.peterwachira.cashipay.data.remote.RemotePaymentDataSource
 import com.peterwachira.cashipay.data.repository.AndroidPaymentRepository
 import com.peterwachira.cashipay.presentation.activity.TransactionHistoryViewModel
+import com.peterwachira.cashipay.presentation.activity.TransactionDetailsViewModel
 import com.peterwachira.cashipay.presentation.payment.PaymentViewModel
 import com.peterwachira.cashipay.sharedLogic.data.remote.PaymentApi
 import com.peterwachira.cashipay.sharedLogic.domain.repository.PaymentRepository
@@ -89,6 +90,13 @@ internal val appModule = module {
 
     viewModel {
         TransactionHistoryViewModel(
+            observeTransactionsUseCase = get()
+        )
+    }
+
+    viewModel { parameters ->
+        TransactionDetailsViewModel(
+            transactionId = parameters.get(),
             observeTransactionsUseCase = get()
         )
     }

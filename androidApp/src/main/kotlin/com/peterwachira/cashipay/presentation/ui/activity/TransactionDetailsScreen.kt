@@ -15,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.peterwachira.cashipay.R
+import com.peterwachira.cashipay.presentation.activity.TransactionDetailsUiState
 import com.peterwachira.cashipay.presentation.theme.CashiPayTheme
 import com.peterwachira.cashipay.presentation.ui.payment.PaymentAmountFormatter
 import com.peterwachira.cashipay.sharedLogic.model.MinorUnits
@@ -44,7 +46,7 @@ import com.peterwachira.cashipay.sharedLogic.model.TransactionId
 /** Displays the persisted details of one outgoing payment. */
 @Composable
 internal fun TransactionDetailsScreen(
-    transaction: PaymentTransaction,
+    state: TransactionDetailsUiState,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -54,16 +56,48 @@ internal fun TransactionDetailsScreen(
             TransactionDetailsTopBar(onBackClick = onBackClick)
         }
     ) { contentPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp, vertical = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            TransactionDetailsCard(transaction = transaction)
-            SavedToActivityNotice()
+        when {
+            state.isLoading -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(contentPadding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            state.transaction != null -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(contentPadding)
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 24.dp, vertical = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    TransactionDetailsCard(transaction = state.transaction)
+                    SavedToActivityNotice()
+                }
+            }
+
+            else -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(contentPadding)
+                        .padding(32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = state.errorMessage
+                            ?: stringResource(R.string.transaction_not_found),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
         }
     }
 }
@@ -213,18 +247,21 @@ private fun SavedToActivityNotice(
 private fun TransactionDetailsScreenPreview() {
     CashiPayTheme {
         TransactionDetailsScreen(
-            transaction = PaymentTransaction(
-                id = requireNotNull(TransactionId.from("txn_7f9a3c2e")),
-                recipientEmail = requireNotNull(
-                    RecipientEmail.from("amina@studio.co")
-                ),
-                amount = Money(
-                    amountMinor = requireNotNull(
-                        MinorUnits.fromPositive(25_000L)
+            state = TransactionDetailsUiState(
+                isLoading = false,
+                transaction = PaymentTransaction(
+                    id = requireNotNull(TransactionId.from("txn_7f9a3c2e")),
+                    recipientEmail = requireNotNull(
+                        RecipientEmail.from("amina@studio.co")
                     ),
-                    currency = PaymentCurrency.USD
+                    amount = Money(
+                        amountMinor = requireNotNull(
+                            MinorUnits.fromPositive(25_000L)
+                        ),
+                        currency = PaymentCurrency.USD
+                    ),
+                    createdAtMillis = 1_745_578_240_000L
                 ),
-                createdAtMillis = 1_745_578_240_000L
             ),
             onBackClick = {}
         )

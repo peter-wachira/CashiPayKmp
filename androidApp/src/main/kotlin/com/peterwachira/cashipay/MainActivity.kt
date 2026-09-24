@@ -4,13 +4,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.peterwachira.cashipay.presentation.navigation.CashiPayDestination
+import com.peterwachira.cashipay.presentation.navigation.CashiPayNavHost
+import com.peterwachira.cashipay.presentation.navigation.CashiPayNavigationBar
 import com.peterwachira.cashipay.presentation.theme.CashiPayTheme
 
 /**
@@ -34,17 +38,36 @@ class MainActivity : ComponentActivity() {
 @Composable
 internal fun CashiPayApp() {
     CashiPayTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            Text(text = "CashiPay KMP")
+        val navController = rememberNavController()
+        val backStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = backStackEntry?.destination?.route
+        val showNavigationBar = currentRoute == CashiPayDestination.Home.route ||
+            currentRoute == CashiPayDestination.Activity.route
+
+        Scaffold(
+            bottomBar = {
+                if (showNavigationBar) {
+                    CashiPayNavigationBar(
+                        currentRoute = currentRoute,
+                        onDestinationClick = { destination ->
+                            navController.navigate(destination.route) {
+                                popUpTo(
+                                    navController.graph.findStartDestination().id
+                                ) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
+                }
+            }
+        ) { contentPadding ->
+            CashiPayNavHost(
+                navController = navController,
+                modifier = Modifier.padding(contentPadding)
+            )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun CashiPayAppPreview() {
-    CashiPayApp()
 }

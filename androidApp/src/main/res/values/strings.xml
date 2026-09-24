@@ -1,6 +1,20 @@
 <resources>
     <string name="app_name">CashiPay</string>
 
+    <string name="navigation_home">Home</string>
+    <string name="navigation_send">Send</string>
+    <string name="navigation_activity">Activity</string>
+
+    <string name="home_greeting">Welcome back</string>
+    <string name="home_title">Move money with confidence</string>
+    <string name="home_send_card_title">Send a payment</string>
+    <string name="home_send_card_message">Fast, clear, and reviewed by you before it leaves.</string>
+    <string name="home_send_action">Send money</string>
+    <string name="home_recent_activity">Recent activity</string>
+    <string name="home_view_all">View all</string>
+    <string name="home_no_activity">Your recent payments will appear here.</string>
+    <string name="home_activity_unavailable">Recent activity is temporarily unavailable.</string>
+
     <string name="payment_send_title">Send payment</string>
     <string name="payment_navigate_back">Navigate back</string>
     <string name="payment_recipient_email_label">Recipient email</string>
@@ -40,4 +54,5 @@
     <string name="transaction_date">Date</string>
     <string name="transaction_amount_value">%1$s %2$s</string>
     <string name="transaction_saved_to_activity">Saved to activity</string>
+    <string name="transaction_not_found">This payment could not be found.</string>
 </resources>
