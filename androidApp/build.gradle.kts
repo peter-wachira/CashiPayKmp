@@ -1,9 +1,15 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
+val releasePaymentApiBaseUrl = providers
+    .gradleProperty("CASHIPAY_API_BASE_URL")
+    .orElse("https://example.invalid")
+    .get()
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.googleServices)
 }
 
 kotlin {
@@ -14,18 +20,38 @@ kotlin {
 dependencies {
     implementation(projects.sharedLogic)
 
-    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
 
-    implementation(compose.material3)
-    implementation(compose.foundation)
-    implementation(compose.ui)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+
+    implementation(libs.kotlinx.coroutines.play.services)
+
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.runtimeCompose)
+    implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.compose.material3)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.ui)
     implementation(libs.compose.uiToolingPreview)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
+
     debugImplementation(libs.compose.uiTooling)
 }
 
 android {
     namespace = "com.peterwachira.cashipay"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.peterwachira.cashipay"
@@ -33,6 +59,7 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+
     }
     packaging {
         resources {
@@ -40,8 +67,21 @@ android {
         }
     }
     buildTypes {
+        getByName("debug") {
+            buildConfigField(
+                "String",
+                "PAYMENT_API_BASE_URL",
+                "\"http://10.0.2.2:8080\""
+            )
+        }
+
         getByName("release") {
             isMinifyEnabled = false
+            buildConfigField(
+                "String",
+                "PAYMENT_API_BASE_URL",
+                "\"$releasePaymentApiBaseUrl\""
+            )
         }
     }
     compileOptions {

@@ -1,28 +1,19 @@
 import SwiftUI
-import SharedLogic
 
+/// Describes the intentionally deferred iOS presentation layer.
 struct ContentView: View {
-    @State private var showContent = false
     var body: some View {
-        VStack {
-            Button("Click me!") {
-                withAnimation {
-                    showContent = !showContent
-                }
-            }
-
-            if showContent {
-                VStack(spacing: 16) {
-                    Image(systemName: "swift")
-                        .font(.system(size: 200))
-                        .foregroundColor(.accentColor)
-                    Text("SwiftUI: \(Greeting().greet())")
-                }
-                .transition(.move(edge: .top).combined(with: .opacity))
-            }
+        VStack(spacing: 16) {
+            Image(systemName: "creditcard.fill")
+                .font(.system(size: 56))
+                .foregroundStyle(Color.accentColor)
+            Text("CashiPay")
+                .font(.largeTitle.bold())
+            Text("The Android app is the primary implementation. Shared payment logic is ready for a future iOS experience.")
+                .multilineTextAlignment(.center)
+                .foregroundStyle(.secondary)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .padding()
+        .padding(32)
     }
 }
 

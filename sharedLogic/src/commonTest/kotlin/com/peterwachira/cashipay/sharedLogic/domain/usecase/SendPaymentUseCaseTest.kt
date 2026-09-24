@@ -103,7 +103,7 @@ internal class SendPaymentUseCaseTest {
     }
 
     private fun validInput() = PaymentInput(
-        recipientEmail = "customer@example.com",
+        recipientEmail = "peterwachira@email.com",
         amount = "100.50",
         currencyCode = "USD"
     )
@@ -111,7 +111,7 @@ internal class SendPaymentUseCaseTest {
     private fun sampleTransaction() = PaymentTransaction(
         id = requireNotNull(TransactionId.from("transaction-1")),
         recipientEmail = requireNotNull(
-            RecipientEmail.from("customer@example.com")
+            RecipientEmail.from("peterwachira@email.com")
         ),
         amount = Money(
             amountMinor = requireNotNull(

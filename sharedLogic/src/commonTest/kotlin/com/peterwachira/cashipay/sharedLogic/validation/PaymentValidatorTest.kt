@@ -15,7 +15,7 @@ internal class PaymentValidatorTest {
     fun `when payment input is valid then validation returns a payment request`() {
         // Given
         val input = PaymentInput(
-            recipientEmail = "customer@example.com",
+            recipientEmail = "peterwachira@email.com",
             amount = "100.50",
             currencyCode = "USD"
         )
@@ -26,7 +26,7 @@ internal class PaymentValidatorTest {
         // Then
         assertTrue(result is PaymentValidationResult.Valid)
         assertEquals(
-            RecipientEmail.from("customer@example.com"),
+            RecipientEmail.from("peterwachira@email.com"),
             result.paymentRequest.recipientEmail
         )
         assertEquals(
@@ -76,7 +76,7 @@ internal class PaymentValidatorTest {
     fun `when amount is zero then validation returns amount greater than zero error`() {
         // Given
         val input = PaymentInput(
-            recipientEmail = "customer@example.com",
+            recipientEmail = "peterwachira@email.com",
             amount = "0",
             currencyCode = "USD"
         )
@@ -93,7 +93,7 @@ internal class PaymentValidatorTest {
     fun `when amount has too many decimal places then validation returns invalid amount`() {
         // Given
         val input = PaymentInput(
-            recipientEmail = "customer@example.com",
+            recipientEmail = "peterwachira@email.com",
             amount = "100.123",
             currencyCode = "USD"
         )
@@ -110,7 +110,7 @@ internal class PaymentValidatorTest {
     fun `when amount exceeds minor unit range then validation returns invalid amount`() {
         // Given
         val input = PaymentInput(
-            recipientEmail = "customer@example.com",
+            recipientEmail = "peterwachira@email.com",
             amount = "92233720368547758.08",
             currencyCode = "USD"
         )
@@ -127,7 +127,7 @@ internal class PaymentValidatorTest {
     fun `when currency is unsupported then validation returns unsupported currency`() {
         // Given
         val input = PaymentInput(
-            recipientEmail = "customer@example.com",
+            recipientEmail = "peterwachira@email.com",
             amount = "50",
             currencyCode = "KES"
         )

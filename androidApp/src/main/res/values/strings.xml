@@ -1,3 +1,58 @@
 <resources>
-    <string name="app_name">CashiPayKmp</string>
+    <string name="app_name">CashiPay</string>
+
+    <string name="navigation_home">Home</string>
+    <string name="navigation_send">Send</string>
+    <string name="navigation_activity">Activity</string>
+
+    <string name="home_greeting">Welcome back</string>
+    <string name="home_title">Move money with confidence</string>
+    <string name="home_send_card_title">Send a payment</string>
+    <string name="home_send_card_message">Fast, clear, and reviewed by you before it leaves.</string>
+    <string name="home_send_action">Send money</string>
+    <string name="home_recent_activity">Recent activity</string>
+    <string name="home_view_all">View all</string>
+    <string name="home_no_activity">Your recent payments will appear here.</string>
+    <string name="home_activity_unavailable">Recent activity is temporarily unavailable.</string>
+
+    <string name="payment_send_title">Send payment</string>
+    <string name="payment_navigate_back">Navigate back</string>
+    <string name="payment_recipient_email_label">Recipient email</string>
+    <string name="payment_amount_label">Amount</string>
+    <string name="payment_currency_label">Currency</string>
+    <string name="payment_review_action">Review payment</string>
+    <string name="payment_review_reminder">Review every detail before sending</string>
+    <string name="payment_review_title">Review payment</string>
+    <string name="payment_processing_notice">Your payment will be processed securely and saved to your activity.</string>
+    <string name="payment_send_action">Send payment</string>
+    <string name="payment_edit_details">Edit details</string>
+    <string name="payment_submission_failed">Payment could not be completed</string>
+    <string name="payment_sent_title">Payment sent</string>
+    <string name="payment_sent_amount">%1$s %2$s</string>
+    <string name="payment_sent_recipient">to %1$s</string>
+    <string name="payment_view_details">View details</string>
+    <string name="payment_done">Done</string>
+
+    <string name="payment_error_recipient_required">Enter the recipient’s email address</string>
+    <string name="payment_error_recipient_invalid">Enter a valid email address</string>
+    <string name="payment_error_amount_required">Enter an amount</string>
+    <string name="payment_error_amount_invalid">Enter a valid amount</string>
+    <string name="payment_error_amount_positive">Amount must be greater than zero</string>
+    <string name="payment_error_currency_unsupported">Select a supported currency</string>
+
+    <string name="activity_title">Activity</string>
+    <string name="activity_up_to_date">Up to date</string>
+    <string name="activity_outgoing_amount">−%1$s</string>
+    <string name="activity_empty_title">No payments yet</string>
+    <string name="activity_empty_message">Payments you send will appear here automatically.</string>
+    <string name="activity_error_title">Activity is unavailable</string>
+    <string name="activity_retry">Try again</string>
+    <string name="transaction_details_title">Payment details</string>
+    <string name="transaction_status">Status</string>
+    <string name="transaction_completed">Completed</string>
+    <string name="transaction_id">Transaction ID</string>
+    <string name="transaction_date">Date</string>
+    <string name="transaction_amount_value">%1$s %2$s</string>
+    <string name="transaction_saved_to_activity">Saved to activity</string>
+    <string name="transaction_not_found">This payment could not be found.</string>
 </resources>
