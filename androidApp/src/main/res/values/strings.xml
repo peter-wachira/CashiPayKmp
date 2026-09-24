@@ -25,4 +25,19 @@
     <string name="payment_error_amount_invalid">Enter a valid amount</string>
     <string name="payment_error_amount_positive">Amount must be greater than zero</string>
     <string name="payment_error_currency_unsupported">Select a supported currency</string>
+
+    <string name="activity_title">Activity</string>
+    <string name="activity_up_to_date">Up to date</string>
+    <string name="activity_outgoing_amount">−%1$s</string>
+    <string name="activity_empty_title">No payments yet</string>
+    <string name="activity_empty_message">Payments you send will appear here automatically.</string>
+    <string name="activity_error_title">Activity is unavailable</string>
+    <string name="activity_retry">Try again</string>
+    <string name="transaction_details_title">Payment details</string>
+    <string name="transaction_status">Status</string>
+    <string name="transaction_completed">Completed</string>
+    <string name="transaction_id">Transaction ID</string>
+    <string name="transaction_date">Date</string>
+    <string name="transaction_amount_value">%1$s %2$s</string>
+    <string name="transaction_saved_to_activity">Saved to activity</string>
 </resources>
