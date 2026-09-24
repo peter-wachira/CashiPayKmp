@@ -17,6 +17,7 @@ dependencies {
 
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
@@ -25,6 +26,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.play.services)
 
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.runtimeCompose)
 
     implementation(libs.compose.material3)
     implementation(libs.compose.foundation)
