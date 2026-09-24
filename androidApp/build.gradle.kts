@@ -1,5 +1,10 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
+val releasePaymentApiBaseUrl = providers
+    .gradleProperty("CASHIPAY_API_BASE_URL")
+    .orElse("https://example.invalid")
+    .get()
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
@@ -55,11 +60,6 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        buildConfigField(
-            "String",
-            "PAYMENT_API_BASE_URL",
-            "\"http://10.0.2.2:8080\""
-        )
     }
     packaging {
         resources {
@@ -67,8 +67,21 @@ android {
         }
     }
     buildTypes {
+        getByName("debug") {
+            buildConfigField(
+                "String",
+                "PAYMENT_API_BASE_URL",
+                "\"http://10.0.2.2:8080\""
+            )
+        }
+
         getByName("release") {
             isMinifyEnabled = false
+            buildConfigField(
+                "String",
+                "PAYMENT_API_BASE_URL",
+                "\"$releasePaymentApiBaseUrl\""
+            )
         }
     }
     compileOptions {
