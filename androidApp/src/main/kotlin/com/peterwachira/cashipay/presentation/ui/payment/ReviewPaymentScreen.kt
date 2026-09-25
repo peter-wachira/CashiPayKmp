@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.peterwachira.cashipay.R
 import com.peterwachira.cashipay.presentation.theme.CashiPayTheme
 import com.peterwachira.cashipay.presentation.ui.component.CashiPrimaryButton
+import com.peterwachira.cashipay.presentation.ui.component.CashiHeroDecoration
 import com.peterwachira.cashipay.sharedLogic.model.MinorUnits
 import com.peterwachira.cashipay.sharedLogic.model.Money
 import com.peterwachira.cashipay.sharedLogic.model.PaymentCurrency
@@ -122,9 +123,7 @@ private fun PaymentSummaryCard(
             modifier = Modifier.padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
                         .size(48.dp)
@@ -151,27 +150,33 @@ private fun PaymentSummaryCard(
 
             HorizontalDivider(color = MaterialTheme.colorScheme.outline)
 
-            Text(
-                text = stringResource(R.string.payment_amount_label),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.bodySmall
-            )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            Surface(
+                color = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                shape = MaterialTheme.shapes.large
             ) {
-                Text(
-                    text = PaymentAmountFormatter.format(paymentRequest.amount),
-                    style = MaterialTheme.typography.headlineSmall
-                )
-
-                Text(
-                    text = paymentRequest.amount.currency.code,
-                    fontWeight = FontWeight.SemiBold,
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    CashiHeroDecoration(modifier = Modifier.matchParentSize())
+                    Column(
+                        modifier = Modifier.padding(20.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.payment_amount_label),
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.72f),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                        Text(
+                            text = stringResource(
+                                R.string.transaction_amount_value,
+                                PaymentAmountFormatter.format(paymentRequest.amount),
+                                paymentRequest.amount.currency.code
+                            ),
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.headlineMedium
+                        )
+                    }
+                }
             }
         }
     }

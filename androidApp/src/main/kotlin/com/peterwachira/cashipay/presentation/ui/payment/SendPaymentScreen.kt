@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -40,6 +41,7 @@ import com.peterwachira.cashipay.presentation.payment.PaymentUiAction
 import com.peterwachira.cashipay.presentation.payment.PaymentUiState
 import com.peterwachira.cashipay.presentation.theme.CashiPayTheme
 import com.peterwachira.cashipay.presentation.ui.component.CashiPrimaryButton
+import com.peterwachira.cashipay.presentation.ui.component.CashiHeroDecoration
 import com.peterwachira.cashipay.presentation.ui.component.CurrencySelector
 import com.peterwachira.cashipay.presentation.ui.component.PaymentTextField
 import com.peterwachira.cashipay.sharedLogic.model.PaymentCurrency
@@ -171,6 +173,8 @@ private fun SendPaymentForm(
             .padding(horizontal = 24.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
+        PaymentFormIntro()
+
         PaymentTextField(
             value = recipientEmail,
             onValueChange = onRecipientEmailChanged,
@@ -192,6 +196,37 @@ private fun SendPaymentForm(
         )
 
         PaymentReviewReminder()
+    }
+}
+
+@Composable
+private fun PaymentFormIntro(
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary,
+        shape = MaterialTheme.shapes.extraLarge
+    ) {
+        Box(modifier = Modifier.heightIn(min = 144.dp)) {
+            CashiHeroDecoration(modifier = Modifier.fillMaxSize())
+            Column(
+                modifier = Modifier.padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.payment_form_intro_title),
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                Text(
+                    text = stringResource(R.string.payment_form_intro_message),
+                    modifier = Modifier.fillMaxWidth(0.78f),
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.78f),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+        }
     }
 }
 

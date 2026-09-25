@@ -36,6 +36,7 @@ import com.peterwachira.cashipay.R
 import com.peterwachira.cashipay.presentation.activity.TransactionDetailsUiState
 import com.peterwachira.cashipay.presentation.theme.CashiPayTheme
 import com.peterwachira.cashipay.presentation.ui.payment.PaymentAmountFormatter
+import com.peterwachira.cashipay.presentation.ui.component.PaymentSuccessGraphic
 import com.peterwachira.cashipay.sharedLogic.model.MinorUnits
 import com.peterwachira.cashipay.sharedLogic.model.Money
 import com.peterwachira.cashipay.sharedLogic.model.PaymentCurrency
@@ -77,6 +78,18 @@ internal fun TransactionDetailsScreen(
                         .padding(horizontal = 24.dp, vertical = 24.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+                    PaymentSuccessGraphic(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .size(112.dp)
+                    )
+                    Text(
+                        text = stringResource(R.string.transaction_completed),
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.SemiBold,
+                        style = MaterialTheme.typography.labelLarge
+                    )
                     TransactionDetailsCard(transaction = state.transaction)
                     SavedToActivityNotice()
                 }
@@ -167,20 +180,23 @@ private fun TransactionDetailsCard(
                 )
             }
 
-            HorizontalDivider(color = MaterialTheme.colorScheme.outline)
+            Text(
+                text = stringResource(
+                    R.string.transaction_amount_value,
+                    PaymentAmountFormatter.format(transaction.amount),
+                    transaction.amount.currency.code
+                ),
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.headlineMedium
+            )
+
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
             DetailRow(
                 label = stringResource(R.string.transaction_status),
                 value = stringResource(R.string.transaction_completed),
                 valueColor = MaterialTheme.colorScheme.primary
-            )
-            DetailRow(
-                label = stringResource(R.string.payment_amount_label),
-                value = stringResource(
-                    R.string.transaction_amount_value,
-                    PaymentAmountFormatter.format(transaction.amount),
-                    transaction.amount.currency.code
-                )
             )
             DetailRow(
                 label = stringResource(R.string.transaction_id),
@@ -217,6 +233,7 @@ private fun DetailRow(
             modifier = Modifier
                 .weight(1f)
                 .padding(start = 24.dp),
+            textAlign = androidx.compose.ui.text.style.TextAlign.End,
             color = valueColor,
             fontWeight = FontWeight.Medium,
             style = MaterialTheme.typography.bodySmall
