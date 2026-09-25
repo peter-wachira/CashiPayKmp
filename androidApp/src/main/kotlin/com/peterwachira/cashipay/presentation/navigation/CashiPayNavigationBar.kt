@@ -3,8 +3,10 @@ package com.peterwachira.cashipay.presentation.navigation
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
@@ -17,7 +19,10 @@ internal fun CashiPayNavigationBar(
     currentRoute: String?,
     onDestinationClick: (CashiPayDestination) -> Unit,
 ) {
-    NavigationBar {
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.surface,
+        tonalElevation = androidx.compose.ui.unit.Dp.Unspecified
+    ) {
         navigationItems.forEach { item ->
             NavigationBarItem(
                 selected = currentRoute == item.destination.route,
@@ -32,7 +37,12 @@ internal fun CashiPayNavigationBar(
                 },
                 label = {
                     Text(text = stringResource(item.labelResource))
-                }
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    indicatorColor = MaterialTheme.colorScheme.secondaryContainer,
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedTextColor = MaterialTheme.colorScheme.primary
+                )
             )
         }
     }

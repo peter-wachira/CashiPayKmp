@@ -9,6 +9,7 @@
     <string name="home_title">Move money with confidence</string>
     <string name="home_send_card_title">Send a payment</string>
     <string name="home_send_card_message">Fast, clear, and reviewed by you before it leaves.</string>
+    <string name="home_secure_payments">SECURE PAYMENTS</string>
     <string name="home_send_action">Send money</string>
     <string name="home_recent_activity">Recent activity</string>
     <string name="home_view_all">View all</string>
@@ -16,6 +17,8 @@
     <string name="home_activity_unavailable">Recent activity is temporarily unavailable.</string>
 
     <string name="payment_send_title">Send payment</string>
+    <string name="payment_form_intro_title">Pay anyone, confidently</string>
+    <string name="payment_form_intro_message">Enter the details below. You’ll review everything before sending.</string>
     <string name="payment_navigate_back">Navigate back</string>
     <string name="payment_recipient_email_label">Recipient email</string>
     <string name="payment_amount_label">Amount</string>

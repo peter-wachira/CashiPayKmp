@@ -1,8 +1,6 @@
 package com.peterwachira.cashipay.presentation.ui.payment
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,22 +8,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.peterwachira.cashipay.R
 import com.peterwachira.cashipay.presentation.theme.CashiPayTheme
 import com.peterwachira.cashipay.presentation.ui.component.CashiPrimaryButton
+import com.peterwachira.cashipay.presentation.ui.component.CashiPayWordmark
+import com.peterwachira.cashipay.presentation.ui.component.PaymentSuccessGraphic
 import com.peterwachira.cashipay.sharedLogic.model.MinorUnits
 import com.peterwachira.cashipay.sharedLogic.model.Money
 import com.peterwachira.cashipay.sharedLogic.model.PaymentCurrency
@@ -48,27 +45,16 @@ internal fun PaymentSuccessScreen(
             .padding(horizontal = 24.dp, vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.weight(1f))
+        CashiPayWordmark(modifier = Modifier.align(Alignment.Start))
 
-        Box(
-            modifier = Modifier
-                .size(96.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary)
-                .clearAndSetSemantics {},
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "✓",
-                color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.displayLarge
-            )
-        }
+        Spacer(modifier = Modifier.weight(0.7f))
+
+        PaymentSuccessGraphic(modifier = Modifier.size(188.dp))
 
         Text(
             text = stringResource(R.string.payment_sent_title),
-            modifier = Modifier.padding(top = 32.dp),
-            style = MaterialTheme.typography.headlineSmall
+            modifier = Modifier.padding(top = 20.dp),
+            style = MaterialTheme.typography.headlineMedium
         )
 
         Text(
@@ -92,7 +78,7 @@ internal fun PaymentSuccessScreen(
             style = MaterialTheme.typography.bodyLarge
         )
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(1.3f))
 
         Column(
             modifier = Modifier.fillMaxWidth(),
